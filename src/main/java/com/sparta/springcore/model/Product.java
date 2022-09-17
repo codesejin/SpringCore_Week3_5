@@ -44,8 +44,11 @@ public class Product {
     // 관심 상품 생성 시 이용합니다. (Edge케이스 처리하는 조건문 추가)
     public Product(ProductRequestDto requestDto, Long userId) {
         //EdgeCase에 대한 Validation
-        ProductValidator productValidator = new ProductValidator();
-        productValidator.validateProductInput(requestDto, userId);
+        /*
+        static함수로 선언할 경우 객체를 만들지 않고, 클래스명에서 함수 호출
+        이미 만들어진 것을 가지고 계속 재활용 가능
+         */
+        ProductValidator.validateProductInput(requestDto, userId);
 
         // 관심상품을 등록한 회원 Id 저장
         this.userId = userId;
