@@ -62,7 +62,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("관심 상품 희망가 - 최저가 미만으로 변경")
     void updateProduct_Failed() {
-// given
+        // given
         Long productId = 100L;
         int myprice = MIN_MY_PRICE - 50;
 
@@ -72,12 +72,12 @@ class ProductServiceTest {
 
         ProductService productService = new ProductService(productRepository);
 
-// when
+        // when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             productService.updateProduct(productId, requestMyPriceDto);
         });
 
-// then
+        // then
         assertEquals(
                 "유효하지 않은 관심 가격입니다. 최소 " + MIN_MY_PRICE + " 원 이상으로 설정해 주세요.",
                 exception.getMessage()
