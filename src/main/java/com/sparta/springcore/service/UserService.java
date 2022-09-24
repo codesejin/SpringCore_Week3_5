@@ -23,7 +23,13 @@ public class UserService {
     }
 
     //회원가입
-    public void registerUser(SignupRequestDto requestDto) {
+    /*
+    테스트하기 위해 기존 void반환타입에서 User로 바꿈
+    왜 테스트를 위해 실제 서비스를 고쳐야되는가?
+    TDD을 말한 이유 : 테스트가 가능한 코드가 좋은 코드다
+     */
+
+    public User registerUser(SignupRequestDto requestDto) {
         // 회원 ID 중복 확인
         String username = requestDto.getUsername();
         Optional<User> found = userRepository.findByUsername(username);
@@ -46,5 +52,6 @@ public class UserService {
         //회원가입시 유저 테이블에 저장
         User user = new User(username, password, email, role);
         userRepository.save(user);
+        return user;
     }
 }
