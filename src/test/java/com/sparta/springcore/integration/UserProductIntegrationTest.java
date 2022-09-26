@@ -11,9 +11,8 @@ import com.sparta.springcore.service.UserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,7 +36,7 @@ public class UserProductIntegrationTest {
 
     @Test
     @Order(1)
-    @DisplayName("회원 가입 정보 없이 상품 등록 시 에러발생")//userId = null
+    @DisplayName("회원 가입 정보 없이 상품 등록 시 에러발생")
     void test1() {
         // given
         String title = "Apple <b>에어팟</b> 2세대 유선충전 모델 (MV7N2KH/A)";
@@ -51,7 +50,7 @@ public class UserProductIntegrationTest {
                 lPrice
         );
 
-        // when : createProduct -> Product -> validateProductInput
+        // when
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             productService.createProduct(requestDto, userId);
         });
@@ -64,7 +63,7 @@ public class UserProductIntegrationTest {
     @Order(2)
     @DisplayName("회원 가입")
     void test2() {
-        // given : 서비스에 요청하는 것이기에 그에 맞는 형태로 만들어줌
+        // given
         String username = "르탄이";
         String password = "nobodynoboy";
         String email = "retan1@spartacodingclub.kr";
@@ -82,12 +81,6 @@ public class UserProductIntegrationTest {
         // then
         assertNotNull(user.getId());
         assertEquals(username, user.getUsername());
-       /*
-        아래 코드는 에러 발생
-        assertEquals(passwordEncoder.encode(password), user.getPassword());
-        이유? 평문을 항상 같은 password를 encode해도 계속 다른 결과로 암호화되기 때문애!
-        matches()함수를 사용해야 사용 가능!
-        */
         assertTrue(passwordEncoder.matches(password, user.getPassword()));
         assertEquals(email, user.getEmail());
         assertEquals(UserRoleEnum.USER, user.getRole());
@@ -111,7 +104,7 @@ public class UserProductIntegrationTest {
                 lPrice
         );
 
-        // when : @Order(2)에서 등록한 userId 사용 (95번라인)
+        // when
         Product product = productService.createProduct(requestDto, userId);
 
         // then
@@ -150,9 +143,15 @@ public class UserProductIntegrationTest {
     @Order(5)
     @DisplayName("회원이 등록한 모든 관심상품 조회")
     void test5() {
-        // given
+        // given : 페이징 샘플데이터
+        int page = 0;
+        int size = 10;
+        String sortBy = "id";
+        boolean isAsc = false;
+
         // when
-        List<Product> productList = productService.getProducts(userId);
+        Page<Product> productList = productService.getProducts(userId, page, size, sortBy, isAsc);
+
         // then
         // 1. 전체 상품에서 테스트에 의해 생성된 상품 찾아오기 (상품의 id 로 찾음)
         Long createdProductId = this.createdProduct.getId();
