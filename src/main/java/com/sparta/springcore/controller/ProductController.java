@@ -30,7 +30,7 @@ public class ProductController {
         Long userId = userDetails.getUser().getId();
 
         Product product = productService.createProduct(requestDto, userId);
-// 응답 보내기
+    // 응답 보내기
         return product;
     }
 
@@ -39,7 +39,7 @@ public class ProductController {
     public Long updateProduct(@PathVariable Long id, @RequestBody ProductMypriceRequestDto requestDto) {
         Product product = productService.updateProduct(id, requestDto);
 
-// 응답 보내기 (업데이트된 상품 id)
+    // 응답 보내기 (업데이트된 상품 id)
         return product.getId();
     }
 
